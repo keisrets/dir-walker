@@ -12,13 +12,17 @@ void find_file(DIR *dr, char *path, char *filename) {
 
     dr = opendir(path);
 
-    while((dir_ent = readdir(dr)) != NULL) {
-        if (is_dir(dir_ent)) {
-            find_file(dr, dir_ent->d_name, filename);
-        } else if (strcmp(dir_ent->d_name, filename) == 0) {
-            getcwd(path, 1024);
-            printf("%s/%s\n", path, dir_ent->d_name);
-            exit(1);
+    if (dr) {
+        while((dir_ent = readdir(dr)) != NULL) {
+            if (is_dir(dir_ent)) {
+                find_file(dr, dir_ent->d_name, filename);
+            } else {
+                if (strcmp(dir_ent->d_name, filename) == 0) {
+                    getcwd(path, 1024);
+                    printf("%s/%s\n", path, dir_ent->d_name);
+                    exit(EXIT_SUCCESS);
+                }
+            }
         }
     }
 
